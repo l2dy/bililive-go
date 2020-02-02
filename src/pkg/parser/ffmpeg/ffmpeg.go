@@ -2,7 +2,9 @@ package ffmpeg
 
 import (
 	"io"
+	"log"
 	"net/url"
+	"os"
 	"os/exec"
 	"sync"
 
@@ -53,6 +55,8 @@ func (p *Parser) ParseLiveStream(url *url.URL, live live.Live, file string) erro
 		return err
 	}
 	p.cmdStdIn = stdIn
+	p.cmd.Stderr = os.Stdout
+	log.Println("ffmpeg invocation is", p.cmd)
 	if err := p.cmd.Start(); err != nil {
 		p.cmd.Process.Kill()
 		return err
